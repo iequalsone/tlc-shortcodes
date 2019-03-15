@@ -29,23 +29,7 @@ class TLC_Shortcodes
      */
     public function set_hooks()
     {
-        add_action('init', __NAMESPACE__ . '\\register_shortcodes');
-    }
-
-    public function register_shortcodes()
-    {
-        add_shortcode('full-width-section', __NAMESPACE__ . '\\full_width_section');
-    }
-
-    public function full_width_section($atts)
-    {
-        // $a = shortcode_atts( array(
-        //     'flag' => false
-        // ), $atts );
-
-        $html = 'Test';
-
-        return $html;
+        add_action('init', 'register_shortcodes');
     }
 
     /**
@@ -59,3 +43,47 @@ class TLC_Shortcodes
 }
 
 $TLC_Shortcodes = new TLC_Shortcodes();
+
+function register_shortcodes()
+{
+    add_shortcode('full-width-section', 'full_width_section');
+}
+
+function full_width_section($atts)
+{
+    $a = shortcode_atts(array(
+        'page_id' => 0,
+        'background_color' => '#ffffff',
+    ), $atts);
+
+    if ($a['page_id'] === 0) {
+        return;
+    }
+
+    $content;
+    $title;
+
+    $query = new WP_Query([
+        'p' => $a['page_id'],
+        'post_type' => 'any',
+    ]);
+
+    if ($query->have_posts()) {
+        foreach ($query->posts as $p) {
+            $title = $p->post_title;
+            $content = apply_filters('the_content', $p->post_content);
+        }
+    }
+
+    wp_reset_query();
+
+    $html = '
+      <section class="full-width-section" style="background-color: ' . $a['background_color'] . '">
+        <div class="container">
+          <h2 class="text-center">' . $title . '</h2>
+          ' . $content . '
+        </div>
+      </section>';
+
+    return $html;
+}
