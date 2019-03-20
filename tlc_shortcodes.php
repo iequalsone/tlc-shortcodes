@@ -200,34 +200,85 @@ function featured_post_type($atts) {
     'orderby' => 'menu_order',
     'order' => 'ASC',
     'show-archive-link' => false,
-    'show-excerpt' => false,
+    'title' => '',
     'card-deck' => false,
+    'taxonomy' => '',
+    'taxonomy-term' => '',
     'background-color' => '#ffffff',
   ], $atts);
 
   $pto = get_post_type_object($a['post-type']);
 
-  $output;
+  $output; $body_html; $header_html; $tax_query = [];
+
+  $title = (!empty($a['title']) ? $a['title'] : $pto->label);
+
+  if($a['show-archive-link']) {
+    $pto_archive = get_post_type_archive_link($a['post-type']);
+    $header_html = '<div class="d-flex mb-4 align-items-center archive-link">
+                      <div class="p-0"><h2>'.$title.'</h2></div>
+                      <div class="ml-auto p-0">
+                        <a class="btn btn-primary btn-block" href="'.$pto_archive.'">Learn more</a>
+                      </div>
+                    </div>';
+  } else {
+    $header_html = '<h2 class="section-title text-center">'.$title.'</h2>';
+  }
+
+  if(!empty($a['taxonomy']) && !empty($a['taxonomy-term'])) {
+    $tax_query = [
+      [
+        'taxonomy' => $a['taxonomy'],
+        'field'    => 'slug',
+        'terms'    => $a['taxonomy-term'],
+      ],
+    ];
+  }
 
   $query = new WP_Query([
     'post_type' => $a['post-type'],
     'orderby' => $a['orderby'],
     'order' => $a['order'],
+    'tax_query' => $tax_query,
   ]);
 
   if($query->have_posts()){
-    $html = '<div class="row">';
-    foreach($query->posts as $p) {
-      $featured_image = get_the_post_thumbnail_url($p->ID, 'thumbnail');
-      $title = $p->post_title;
-      if(!empty($featured_image)){
-        $html .= '<div class="col-12 col-sm-6 col-md-2 text-center">
-                    <img class="img-fluid" src="'.$featured_image.'" alt="'.$title.'" />
-                    <p>'.$title.'</p>
-                  </div>';
+    if($a['card-deck']) {
+      $body_html = '<div class="card-deck card-deck-slider">';
+      foreach($query->posts as $p) {
+        $featured_image = get_the_post_thumbnail_url($p->ID, 'wide-thumb');
+        $title = $p->post_title;
+        $excerpt = $p->post_excerpt;
+        $permalink = get_permalink($p->ID);
+
+        if(!empty($featured_image)){
+          $body_html .= '<div class="slide text-center">
+                      <div class="card">
+                        <img class="card-img-top" src="'.$featured_image.'" alt="'.$title.'" />
+                        <div class="card-body">
+                          <h5 class="card-title">'.$title.'</h5>
+                          '.(!empty($excerpt) ? '<p class="card-text">'.$excerpt.'</p>' : '').'
+                          <a href="'.$permalink.'" class="btn btn-primary">Learn more</a>
+                        </div>
+                      </div>
+                    </div>';
+        }
       }
+      $body_html .= "</div>";
+    } else {
+      $body_html = '<div class="simple-slider">';
+      foreach($query->posts as $p) {
+        $featured_image = get_the_post_thumbnail_url($p->ID, 'affiliate-thumb');
+        $title = $p->post_title;
+        if(!empty($featured_image)){
+          $body_html .= '<div class="slide text-center">
+                      <img class="img-fluid" src="'.$featured_image.'" alt="'.$title.'" />
+                      <p>'.$title.'</p>
+                    </div>';
+        }
+      }
+      $body_html .= "</div>";
     }
-    $html .= "</div>";
   }
 
   wp_reset_query();
@@ -235,8 +286,8 @@ function featured_post_type($atts) {
   $output .= '
       <section class="featured-post-type" style="background-color: '.$a['background-color'].';">
         <div class="container">
-          <h2 class="section-title text-center">'.$pto->label.'</h2>
-          '.$html.'
+          '.$header_html.'
+          '.$body_html.'
         </div>
       </section>';
 
