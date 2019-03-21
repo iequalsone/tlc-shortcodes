@@ -156,7 +156,7 @@ function featured_category($atts) {
             <div class="section-description row">
               <div class="col-md-8 offset-md-2"><p class="text-center">'.$desc.'</p></div>
             </div>
-            <div class="card-deck">';
+            <div class="row cards-wrap">';
               foreach($query->posts as $p) {
                 $title = $p->post_title;
                 $excerpt = $p->post_excerpt;
@@ -171,12 +171,14 @@ function featured_category($atts) {
                 }
 
                 $output .= '
-                  <div class="card shadow rounded-0">
-                    '.(!empty($image) ? '<img src="'.$image.'" class="card-img-top rounded-0" alt="'.$title.'">' : '' ).'
-                    <div class="card-body">
-                      <h5 class="card-title">'.$title.'</h5>
-                      <p class="card-text">'.$excerpt.'</p>
-                      <a href="'.$permalink.'" class="btn btn-primary btn-block">Learn more</a>
+                  <div class="col-12 col-md-4">
+                    <div class="card shadow rounded-0">
+                      '.(!empty($image) ? '<img src="'.$image.'" class="card-img-top rounded-0" alt="'.$title.'">' : '' ).'
+                      <div class="card-body">
+                        <h5 class="card-title">'.$title.'</h5>
+                        <p class="card-text">'.$excerpt.'</p>
+                        <a href="'.$permalink.'" class="btn btn-primary btn-block">Learn more</a>
+                      </div>
                     </div>
                   </div>';
               }
@@ -218,7 +220,7 @@ function featured_post_type($atts) {
     $header_html = '<div class="d-flex mb-4 align-items-center archive-link">
                       <div class="p-0"><h2>'.$title.'</h2></div>
                       <div class="ml-auto p-0">
-                        <a class="btn btn-primary btn-block" href="'.$pto_archive.'">Learn more</a>
+                        <a class="btn btn-pink-light btn-block pl-4 pr-4" href="'.$pto_archive.'">Learn more</a>
                       </div>
                     </div>';
   } else {
@@ -253,15 +255,14 @@ function featured_post_type($atts) {
 
         if(!empty($featured_image)){
           $body_html .= '<div class="slide text-center">
-                      <div class="card">
-                        <img class="card-img-top" src="'.$featured_image.'" alt="'.$title.'" />
-                        <div class="card-body">
-                          <h5 class="card-title">'.$title.'</h5>
-                          '.(!empty($excerpt) ? '<p class="card-text">'.$excerpt.'</p>' : '').'
-                          <a href="'.$permalink.'" class="btn btn-primary">Learn more</a>
+                          <div class="card"><a href="'.$permalink.'">
+                          <img class="card-img-top" src="'.$featured_image.'" alt="'.$title.'" />
+                          <div class="card-body">
+                            <h5 class="card-title">'.$title.'</h5>
+                            '.(!empty($excerpt) ? '<p class="card-text">'.$excerpt.'</p>' : '').'
+                          </a></div>
                         </div>
-                      </div>
-                    </div>';
+                      </div>';
         }
       }
       $body_html .= "</div>";
