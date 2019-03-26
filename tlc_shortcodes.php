@@ -47,6 +47,8 @@ function register_shortcodes()
   add_shortcode('featured-page', 'featured_page');
   add_shortcode('featured-category', 'featured_category');
   add_shortcode('featured-post-type', 'featured_post_type');
+  add_shortcode('featured-events', 'featured_events');
+  add_shortcode('featured-more-information', 'featured_more_information');
 }
 
 function featured_page($atts)
@@ -199,7 +201,7 @@ function featured_category($atts) {
 function featured_post_type($atts) {
   $a = shortcode_atts([
     'post-type' => 'post',
-    'orderby' => 'menu_order',
+    'orderby' => ['menu_order' => 'ASC', 'date' => 'DESC'],
     'order' => 'ASC',
     'show-archive-link' => false,
     'title' => '',
@@ -289,6 +291,50 @@ function featured_post_type($atts) {
         <div class="container">
           '.$header_html.'
           '.$body_html.'
+        </div>
+      </section>';
+
+  return $output;
+}
+
+function featured_more_information($atts) {
+  $a = shortcode_atts([
+    'title' => '',
+    'email' => '',
+    'phone' => '',
+    'facebook' => '',
+    'youtube' => '',
+    'background-color' => '#ffffff',
+  ], $atts);
+
+  $output; $body_html;
+
+  $output .= '
+      <section class="featured-more-information" style="background-color: '.$a['background-color'].';">
+        <div class="container">
+          <div class="row align-items-center text-center">
+            <div class="col-12 col-lg-4 mb-2 mb-lg-0"><h2 class="title">'.$a['title'].'</h2></div>
+            <div class="col-12 col-lg-3 mb-2 mb-lg-0">
+              <i class="fas fa-envelope"></i> <a class="link" href="mailto:'.$a['email'].'">'.$a['email'].'</a>
+            </div>
+            <div class="col-12 col-lg-3 mb-4 mb-lg-0">
+              <i class="fas fa-phone"></i> <a class="link" href="tel:'.$a['phone'].'">'.$a['phone'].'</a>
+            </div>
+            <div class="col-12 col-lg-2 mb-lg-0">
+              <a class="social-link" href="'.$a['facebook'].'">
+                <span class="fa-stack fa-1x">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+              <a class="social-link" href="'.$a['youtube'].'">
+                <span class="fa-stack fa-1x">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fab fa-youtube fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+            </div>
+          </div>
         </div>
       </section>';
 
