@@ -243,29 +243,34 @@ function featured_post_type($atts) {
     'post_type' => $a['post-type'],
     'orderby' => $a['orderby'],
     'order' => $a['order'],
-    'tax_query' => $tax_query,
+    'tax_query' => $tax_query
   ]);
 
   if($query->have_posts()){
     if($a['card-deck']) {
       $body_html = '<div class="card-deck card-deck-slider">';
       foreach($query->posts as $p) {
-        $featured_image = get_the_post_thumbnail_url($p->ID, 'wide-thumb');
         $title = $p->post_title;
-        $excerpt = $p->post_excerpt;
+        $excerpt = substr($p->post_excerpt, 0, 155);
         $permalink = get_permalink($p->ID);
+        $featured_image;
 
-        if(!empty($featured_image)){
-          $body_html .= '<div class="slide text-center">
+        // Determine what image to use
+        if(get_the_post_thumbnail_url($p->ID)) {
+          $featured_image = get_the_post_thumbnail_url($p->ID, 'wide-thumb');
+        } elseif (wp_get_attachment_image_url(206)) {
+          $featured_image = wp_get_attachment_image_url(206, 'wide-thumb');
+        }
+
+        $body_html .= '<div class="slide text-center">
                           <div class="card"><a href="'.$permalink.'">
-                          <img class="card-img-top" src="'.$featured_image.'" alt="'.$title.'" />
+                          '.(!empty($featured_image) ? '<img class="card-img-top" src="'.$featured_image.'" alt="'.$title.'" />' : "").'
                           <div class="card-body">
                             <h5 class="card-title">'.$title.'</h5>
                             '.(!empty($excerpt) ? '<p class="card-text">'.$excerpt.'</p>' : '').'
                           </a></div>
                         </div>
                       </div>';
-        }
       }
       $body_html .= "</div>";
     } else {
@@ -288,6 +293,90 @@ function featured_post_type($atts) {
 
   $output .= '
       <section class="featured-post-type" style="background-color: '.$a['background-color'].';">
+        <div class="container">
+          '.$header_html.'
+          '.$body_html.'
+        </div>
+      </section>';
+
+  return $output;
+}
+
+function featured_events($atts) {
+  $a = shortcode_atts([
+    'show-archive-link' => false,
+    'title' => '',
+    'background-color' => '#ffffff',
+  ], $atts);
+
+  $pto = get_post_type_object($a['post-type']);
+
+  $output; $body_html; $header_html; $tax_query = [];
+
+  $title = (!empty($a['title']) ? $a['title'] : $pto->label);
+
+  if($a['show-archive-link']) {
+    $pto_archive = get_post_type_archive_link($a['post-type']);
+    $header_html = '<div class="d-flex mb-4 align-items-center archive-link">
+                      <div class="p-0"><h2>'.$title.'</h2></div>
+                      <div class="ml-auto p-0">
+                        <a class="btn btn-pink-light btn-block pl-4 pr-4" href="'.$pto_archive.'">Learn more</a>
+                      </div>
+                    </div>';
+  } else {
+    $header_html = '<h2 class="section-title text-center">'.$title.'</h2>';
+  }
+
+  $query = new WP_Query([
+    'post_type' => 'events'
+  ]);
+
+  if($query->have_posts()){
+    $body_html = '<div class="card-deck card-deck-slider">';
+    foreach($query->posts as $p) {
+      $title = $p->post_title;
+      $excerpt = substr($p->post_excerpt, 0, 155);
+      $permalink = get_permalink($p->ID);
+
+      $event_type = get_field('event_type', $p->ID);
+      $dates = get_field('dates', $p->ID);
+      $registration_cost = get_field('registration_cost', $p->ID);
+      $services_provided = get_field('services_provided', $p->ID);
+
+      // Determine what image to show
+      if(!empty(get_the_post_thumbnail_url($p->ID))) {
+        // If the event has a featured image, use that
+        $featured_image = get_the_post_thumbnail_url($p->ID, 'wide-thumb');
+      } elseif(get_the_post_thumbnail_url($event_type[0]->ID)) {
+        // else, if the Event Type has a featured image, use that
+        $featured_image = get_the_post_thumbnail_url($event_type[0]->ID, 'wide-thumb');
+      } else {
+        // Otherwise, use the Lotus Flower (media id 206)
+        // I know! It's a hard coded id! I get it!
+        $featured_image = wp_get_attachment_image_url(206, 'wide-thumb');
+      }
+
+      $body_html .= '<div class="slide text-center">
+                        <div class="card"><a href="'.$permalink.'">
+                        '.(!empty($featured_image) 
+                          ? '<img class="card-img-top" src="'.$featured_image.'" alt="'.$title.'" />' 
+                          : "" ).'
+                        <div class="card-body">
+                          <h4 class="card-title">'.$title.'</h4>
+                          '.(!empty($dates) ? '<p class="card-subtitle mb-2">'.$dates.'</p>' : '').'
+                          '.(!empty($registration_cost) ? '<p class="h2">$'.$registration_cost.'</p>' : '').'
+                          <p>Register Now &gt;</p>
+                        </a></div>
+                      </div>
+                    </div>';
+    }
+    $body_html .= "</div>";
+  }
+
+  wp_reset_query();
+
+  $output .= '
+      <section class="featured-events" style="background-color: '.$a['background-color'].';">
         <div class="container">
           '.$header_html.'
           '.$body_html.'
