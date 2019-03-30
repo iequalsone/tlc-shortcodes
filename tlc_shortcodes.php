@@ -359,21 +359,21 @@ function featured_events($atts) {
         $featured_image = wp_get_attachment_image_url(206, 'wide-thumb');
       }
 
-      $body_html .= '<div class="slide text-center">
-                      <div class="card">
-                        <a href="'.$permalink.'">
-                        '.(!empty($featured_image) 
-                          ? '<img class="card-img-top" src="'.$featured_image.'" alt="'.$title.'" />' 
-                          : "" ).'
-                          <div class="card-body">
-                            <h4 class="card-title">'.$title.'</h4>
-                            '.(!empty($dates) ? '<p class="card-subtitle mb-2">'.$dates.'</p>' : '').'
-                            '.(!empty($registration_cost) ? '<p class="h2">$'.$registration_cost.'</p>' : '').'
-                            <p>Register Now &gt;</p>
-                          </div>
-                        </a>
-                      </div>
-                    </div>';
+      $body_html .= ' <div class="slide text-center">
+                        <div class="card">
+                          <a href="'.$permalink.'">
+                          '.(!empty($featured_image) 
+                            ? '<img class="card-img-top" src="'.$featured_image.'" alt="'.$title.'" />' 
+                            : "" ).'
+                            <div class="card-body">
+                              <h4 class="card-title">'.$title.'</h4>
+                              '.(!empty($dates) ? '<p class="card-subtitle mb-2">'.$dates.'</p>' : '').'
+                              '.(!empty($registration_cost) ? '<p class="h2">$'.$registration_cost.'</p>' : '').'
+                              <p>Register Now &gt;</p>
+                            </div>
+                          </a>
+                        </div>
+                      </div>';
     }
     $body_html .= "</div>";
   }
