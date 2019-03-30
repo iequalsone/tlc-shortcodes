@@ -222,7 +222,7 @@ function featured_post_type($atts) {
     $header_html = '<div class="d-flex mb-4 align-items-center archive-link">
                       <div class="p-0"><h2>'.$title.'</h2></div>
                       <div class="ml-auto p-0">
-                        <a class="btn btn-pink-light btn-block pl-4 pr-4" href="'.$pto_archive.'">Learn more</a>
+                        <a class="btn btn-pink-light btn-block pl-4 pr-4 shadow-sm" href="'.$pto_archive.'">Learn more</a>
                       </div>
                     </div>';
   } else {
@@ -307,6 +307,7 @@ function featured_post_type($atts) {
 function featured_events($atts) {
   $a = shortcode_atts([
     'show-archive-link' => false,
+    'archive-link-text' => 'Learn More',
     'title' => '',
     'background-color' => '#ffffff',
   ], $atts);
@@ -318,11 +319,11 @@ function featured_events($atts) {
   $title = (!empty($a['title']) ? $a['title'] : $pto->label);
 
   if($a['show-archive-link']) {
-    $pto_archive = get_post_type_archive_link($a['post-type']);
+    $pto_archive = get_post_type_archive_link('events');
     $header_html = '<div class="d-flex mb-4 align-items-center archive-link">
                       <div class="p-0"><h2>'.$title.'</h2></div>
                       <div class="ml-auto p-0">
-                        <a class="btn btn-pink-light btn-block pl-4 pr-4" href="'.$pto_archive.'">Learn more</a>
+                        <a class="btn btn-pink-light btn-block pl-4 pr-4 shadow-sm" href="'.$pto_archive.'">'.$a['archive-link-text'].'</a>
                       </div>
                     </div>';
   } else {
