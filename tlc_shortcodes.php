@@ -415,13 +415,13 @@ function featured_more_information($atts) {
               <i class="fas fa-phone"></i> <a class="link" href="tel:'.$a['phone'].'">'.$a['phone'].'</a>
             </div>
             <div class="col-12 col-lg-2 mb-lg-0">
-              <a class="social-link" href="'.$a['facebook'].'">
+              <a target="_blank" class="social-link" href="'.$a['facebook'].'">
                 <span class="fa-stack fa-1x">
                   <i class="fas fa-circle fa-stack-2x"></i>
                   <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
                 </span>
               </a>
-              <a class="social-link" href="'.$a['youtube'].'">
+              <a target="_blank" class="social-link" href="'.$a['youtube'].'">
                 <span class="fa-stack fa-1x">
                   <i class="fas fa-circle fa-stack-2x"></i>
                   <i class="fab fa-youtube fa-stack-1x fa-inverse"></i>
