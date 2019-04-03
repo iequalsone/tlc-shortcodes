@@ -1,0 +1,7 @@
+{
+	"name": "iequalsone/tlc-shortcodes",
+	"description": "Custom Shortcodes for TLC",
+	"keywords": ["wordpress", "blog", "cms"],
+	"type": "wordpress-plugin"
+}
+
