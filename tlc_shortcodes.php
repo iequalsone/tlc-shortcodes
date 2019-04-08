@@ -460,8 +460,8 @@ function featured_section($atts) {
 
   $query = new WP_Query([
     'post_type' => 'services',
+    'post__in' => $a['services'],
     'orderby' => 'post__in',
-    'post__in' => $a['services']
   ]);
 
   if($query->have_posts()){
@@ -521,7 +521,7 @@ function featured_section($atts) {
         </div>
       </section>';
 
-  return $output;
+  // return $output;
 }
 
 $TLC_Shortcodes = new TLC_Shortcodes();
