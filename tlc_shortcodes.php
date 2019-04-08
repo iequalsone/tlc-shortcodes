@@ -47,6 +47,7 @@ function register_shortcodes()
   add_shortcode('featured-page', 'featured_page');
   add_shortcode('featured-category', 'featured_category');
   add_shortcode('featured-post-type', 'featured_post_type');
+  add_shortcode('featured-section', 'featured_section');
   add_shortcode('featured-events', 'featured_events');
   add_shortcode('featured-more-information', 'featured_more_information');
 }
@@ -429,6 +430,94 @@ function featured_more_information($atts) {
               </a>
             </div>
           </div>
+        </div>
+      </section>';
+
+  return $output;
+}
+
+function featured_section($atts) {
+  $a = shortcode_atts([
+    'title' => '',
+    'display-type' => '',
+    'excerpt' => '',
+    'services' => ''
+  ], $atts);
+
+  $output; $body_html; $header_html; $tax_query = [];
+
+  if($a['show-archive-link']) {
+    $pto_archive = get_post_type_archive_link($a['post-type']);
+    $header_html = '<div class="d-flex mb-4 align-items-center archive-link">
+                      <div class="p-0"><h2>'.$title.'</h2></div>
+                      <div class="ml-auto p-0">
+                        <a class="btn btn-pink-light btn-block pl-4 pr-4 shadow-sm" href="'.$pto_archive.'">Learn more</a>
+                      </div>
+                    </div>';
+  } else {
+    $header_html = '<h2 class="section-title text-center">'.$title.'</h2>';
+  }
+
+  $query = new WP_Query([
+    'post_type' => 'services',
+    'orderby' => 'post__in',
+    'post__in' => $a['services']
+  ]);
+
+  if($query->have_posts()){
+    // if($a['card-deck']) {
+    //   $body_html = '<div class="card-deck card-deck-slider">';
+    //   foreach($query->posts as $p) {
+    //     $title = $p->post_title;
+    //     $excerpt = substr($p->post_excerpt, 0, 155);
+    //     $permalink = get_permalink($p->ID);
+    //     $featured_image;
+
+    //     // Determine what image to use
+    //     if(get_the_post_thumbnail_url($p->ID)) {
+    //       $featured_image = get_the_post_thumbnail_url($p->ID, 'wide-thumb');
+    //     } elseif (wp_get_attachment_image_url(206)) {
+    //       $featured_image = wp_get_attachment_image_url(206, 'wide-thumb');
+    //     }
+
+    //     $body_html .= '<div class="slide text-center">
+    //                     <div class="card">
+    //                       <a href="'.$permalink.'">
+    //                         '.(!empty($featured_image) ? '<img class="card-img-top" src="'.$featured_image.'" alt="'.$title.'" />' : "").'
+    //                         <div class="card-body">
+    //                           <h5 class="card-title">'.$title.'</h5>
+    //                           '.(!empty($excerpt) ? '<p class="card-text">'.$excerpt.'</p>' : '').'
+    //                         </div>
+    //                       </a>
+    //                     </div>
+    //                   </div>';
+    //   }
+    //   $body_html .= "</div>";
+    // } else {
+    //   $body_html = '<div class="simple-slider">';
+    //   foreach($query->posts as $p) {
+    //     $featured_image = get_the_post_thumbnail_url($p->ID, 'affiliate-thumb');
+    //     $title = $p->post_title;
+    //     if(!empty($featured_image)){
+    //       $body_html .= '<div class="slide text-center">
+    //                   <img class="img-fluid" src="'.$featured_image.'" alt="'.$title.'" />
+    //                   <p>'.$title.'</p>
+    //                 </div>';
+    //     }
+    //   }
+    //   $body_html .= "</div>";
+    // }
+
+    var_dump($query->posts);
+  }
+
+  wp_reset_query();
+
+  $output .= '
+      <section class="featured-post-type" style="background-color: '.$a['background-color'].';">
+        <div class="container">
+          '.$header_html.'
+          '.$body_html.'
         </div>
       </section>';
 
