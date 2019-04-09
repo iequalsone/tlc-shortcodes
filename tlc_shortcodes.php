@@ -196,10 +196,13 @@ function featured_section($atts) {
         $title = $p->post_title;
         $excerpt = substr($p->post_excerpt, 0, 155);
         $permalink = get_permalink($p->ID);
+        $thumbnail_override = get_field('thumbnail_override', $p->ID);
         $featured_image;
 
         // Determine what image to use
-        if(get_the_post_thumbnail_url($p->ID)) {
+        if(!empty($thumbnail_override)) {
+          $featured_image = wp_get_attachment_image_url($thumbnail_override, 'wide-thumb');
+        } elseif (get_the_post_thumbnail_url($p->ID)) {
           $featured_image = get_the_post_thumbnail_url($p->ID, 'wide-thumb');
         } elseif (wp_get_attachment_image_url(206)) {
           $featured_image = wp_get_attachment_image_url(206, 'wide-thumb');
@@ -343,7 +346,7 @@ function featured_events($atts) {
 
       $event_type = get_field('event_type', $p->ID);
       $dates = get_field('dates', $p->ID);
-      $registration_cost = get_field('registration_cost', $p->ID);
+      $registration_cost = str_replace("$", "", get_field('registration_cost', $p->ID));
 
       // Determine what image to show
       if(!empty(get_the_post_thumbnail_url($p->ID))) {
