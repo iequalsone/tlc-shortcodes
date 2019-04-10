@@ -462,18 +462,21 @@ function get_single_banner($atts) {
     $featured_image = wp_get_attachment_image_url(260, 'wide-banner');
   }
 
+  $img_html = (!empty($featured_image) ? "<img class='img-fluid banner-image' src='$featured_image' />" : "" );
+
   if($featured_image){
-    $output = '
-      <div class="single-banner shadow" style="background-image: url('.$featured_image.')">
-        <div class="container h-100">
-          <div class="row align-items-end h-100">
-            <div class="col-12 mb-4">
-              <h1 class="entry-title">'.$title.'</h1>
-            </div>
-          </div>
-        </div>
-      </div>
-    ';
+    $output .= "<div class='single-banner shadow'>
+                  $img_html
+                  <div class='banner-text'>
+                    <div class='row align-items-center'>
+                      <div class='col-12'>
+                        <div class='description'>
+                          <h2>$title</h2>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>";
   }
 
   return $output;
