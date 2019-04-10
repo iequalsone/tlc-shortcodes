@@ -49,6 +49,8 @@ function register_shortcodes()
   add_shortcode('featured-content', 'featured_content');
   add_shortcode('featured-events', 'featured_events');
   add_shortcode('featured-more-information', 'featured_more_information');
+  add_shortcode('single-banner', 'get_single_banner');
+  add_shortcode('home-banner', 'get_home_banner');
 }
 
 function featured_post_type($atts) {
@@ -433,6 +435,90 @@ function featured_more_information($atts) {
           </div>
         </div>
       </section>';
+
+  return $output;
+}
+
+function get_single_banner($atts) {
+  $obj = get_queried_object();
+  $output; $title; $featured_image;
+
+  if(is_single() || is_page()) {
+    $title = get_the_title();
+    $event_type = get_field('event_type', $p->ID);
+
+    // Determine what image to use
+    if(get_the_post_thumbnail_url($p->ID)) {
+      $featured_image = get_the_post_thumbnail_url($p->ID, 'wide-banner');
+    } elseif(get_the_post_thumbnail_url($event_type[0]->ID)) {
+      // else, if is Event and the Event Type has a featured image, use that
+      $featured_image = get_the_post_thumbnail_url($event_type[0]->ID, 'wide-banner');
+    } elseif (wp_get_attachment_image_url(206)) {
+      $featured_image = wp_get_attachment_image_url(260, 'wide-banner');
+    }
+
+  } else {
+    $title = $obj->name;
+    $featured_image = wp_get_attachment_image_url(260, 'wide-banner');
+  }
+
+  if($featured_image){
+    $output = '
+      <div class="single-banner shadow" style="background-image: url('.$featured_image.')">
+        <div class="container h-100">
+          <div class="row align-items-end h-100">
+            <div class="col-12 mb-4">
+              <h1 class="entry-title">'.$title.'</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+    ';
+  }
+
+  return $output;
+}
+
+function get_home_banner($atts) {
+  $output;
+
+  $query = new \WP_Query([
+    'post_type' => 'home-banner',
+    'orderby' => 'menu_order',
+    'order' => 'ASC',
+    'posts_per_page' => -1
+  ]);
+
+  if($query->have_posts()) {
+    $output .= "<div class='home-banner-section'>";
+    foreach($query->posts as $p) {
+      $title = $p->post_title;
+      $desc = get_field('description', $p->ID);
+      $link = get_field('link', $p->ID);
+      $featured_image = get_the_post_thumbnail_url($p->ID, 'wide-banner');
+
+      $link = (!empty($link) ? "<a class='btn btn-primary btn-block link' href='".$link['url']."' target='".$link['target']."' title='".$link['title']."'>Learn More</a>" : "");
+      $img_html = (!empty($featured_image) ? "<img class='img-fluid banner-image' src='$featured_image' />" : "" );
+
+      $output .= "<div class='slide'>
+                    $img_html
+                    <div class='banner-text'>
+                      <div class='row align-items-center'>
+                        <div class='col-12 col-md-9'>
+                          <div class='description'>
+                            <h2>$title</h2>
+                            <p>$desc</p>
+                          </div>
+                        </div>
+                        <div class='col-12 col-md-3'>$link</div>
+                      </div>
+                    </div>
+                  </div>";
+    }
+    $output .= "</div>";
+  }
+
+  wp_reset_query();
 
   return $output;
 }
