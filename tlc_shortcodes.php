@@ -192,66 +192,36 @@ function featured_section($atts) {
   ]);
 
   if($query->have_posts()){
-    if($a['display-type'] === 'scrolling') {
-      $body_html = '<div class="card-deck card-deck-slider">';
-      foreach($query->posts as $p) {
-        $title = $p->post_title;
-        $excerpt = substr($p->post_excerpt, 0, 155);
-        $permalink = get_permalink($p->ID);
-        $thumbnail_override = get_field('thumbnail_override', $p->ID);
-        $featured_image;
+    $body_html = '<div class="card-deck card-deck-slider '.$a['display-type'].'">';
+    foreach($query->posts as $p) {
+      $title = $p->post_title;
+      $excerpt = substr($p->post_excerpt, 0, 155);
+      $permalink = get_permalink($p->ID);
+      $thumbnail_override = get_field('thumbnail_override', $p->ID);
+      $featured_image;
 
-        // Determine what image to use
-        if(!empty($thumbnail_override)) {
-          $featured_image = wp_get_attachment_image_url($thumbnail_override, 'wide-thumb');
-        } elseif (get_the_post_thumbnail_url($p->ID)) {
-          $featured_image = get_the_post_thumbnail_url($p->ID, 'wide-thumb');
-        } elseif (wp_get_attachment_image_url(206)) {
-          $featured_image = wp_get_attachment_image_url(206, 'wide-thumb');
-        }
-
-        $body_html .= '<div class="slide text-center">
-                        <div class="card">
-                          <a href="'.$permalink.'">
-                            '.(!empty($featured_image) ? '<img class="card-img-top" src="'.$featured_image.'" alt="'.$title.'" />' : "").'
-                            <div class="card-body">
-                              <h5 class="card-title">'.$title.'</h5>
-                              '.(!empty($excerpt) ? '<p class="card-text">'.$excerpt.'</p>' : '').'
-                            </div>
-                          </a>
-                        </div>
-                      </div>';
-      }
-      $body_html .= "</div>";
-    } else {
-      $body_html = '<div class="row cards-wrap">';
-      foreach($query->posts as $p) {
-        $title = $p->post_title;
-        $excerpt = $p->post_excerpt;
+      // Determine what image to use
+      if(!empty($thumbnail_override)) {
+        $featured_image = wp_get_attachment_image_url($thumbnail_override, 'wide-thumb');
+      } elseif (get_the_post_thumbnail_url($p->ID)) {
         $featured_image = get_the_post_thumbnail_url($p->ID, 'wide-thumb');
-        $permalink = get_permalink($p->ID); 
-        // $thumbnail_override = get_field('thumbnail_override', $p->ID);
-
-        if(!empty($thumbnail_override)) {
-          $image = $thumbnail_override;
-        } else {
-          $image = !empty($featured_image) ? $featured_image : "";
-        }
-
-        $body_html .= '
-          <div class="col-12 col-md-4">
-            <div class="card shadow rounded-0">
-              '.(!empty($image) ? '<img src="'.$image.'" class="card-img-top rounded-0" alt="'.$title.'">' : '' ).'
-              <div class="card-body">
-                <h5 class="card-title">'.$title.'</h5>
-                <p class="card-text">'.$excerpt.'</p>
-                <a href="'.$permalink.'" class="btn btn-primary btn-block">Learn more</a>
-              </div>
-            </div>
-          </div>';
+      } elseif (wp_get_attachment_image_url(206)) {
+        $featured_image = wp_get_attachment_image_url(206, 'wide-thumb');
       }
-      $body_html .= "</div>";
+
+      $body_html .= '<div class="slide text-center">
+                      <div class="card">
+                        <a href="'.$permalink.'">
+                          '.(!empty($featured_image) ? '<img class="card-img-top" src="'.$featured_image.'" alt="'.$title.'" />' : "").'
+                          <div class="card-body">
+                            <h5 class="card-title">'.$title.'</h5>
+                            '.(!empty($excerpt) ? '<p class="card-text">'.$excerpt.'</p>' : '').'
+                          </div>
+                        </a>
+                      </div>
+                    </div>';
     }
+    $body_html .= "</div>";
   }
 
   wp_reset_query();
