@@ -435,7 +435,7 @@ function get_single_banner($atts) {
   $img_html = (!empty($featured_image) ? "<img class='img-fluid banner-image' src='$featured_image' />" : "" );
 
   if($featured_image){
-    $output .= "<div class='single-banner shadow'>
+    $output .= "<div class='single-banner'>
                   $img_html
                   <div class='banner-text'>
                     <div class='row align-items-center'>
