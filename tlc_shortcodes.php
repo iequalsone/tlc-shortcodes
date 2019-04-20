@@ -453,7 +453,7 @@ function get_single_banner($atts) {
 }
 
 function get_home_banner($atts) {
-  $output;
+  $output = "";
 
   $query = new \WP_Query([
     'post_type' => 'home-banner',
@@ -470,7 +470,7 @@ function get_home_banner($atts) {
       $link = get_field('link', $p->ID);
       $featured_image = get_the_post_thumbnail_url($p->ID, 'wide-banner');
 
-      $link = (!empty($link) ? "<a class='btn btn-primary btn-block link' href='".$link['url']."' target='".$link['target']."' title='".$link['title']."'>Learn More</a>" : "");
+      $link = (!empty($link) ? "<a class='btn btn-primary btn-block link mt-xs-2 mt-sm-2' href='".$link['url']."' target='".$link['target']."' title='".$link['title']."'>Learn More</a>" : "");
       $img_html = (!empty($featured_image) ? "<img class='img-fluid banner-image' src='$featured_image' />" : "" );
 
       $output .= "<div class='slide'>
