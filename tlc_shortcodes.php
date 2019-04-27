@@ -68,7 +68,7 @@ function featured_post_type($atts) {
 
 	$pto = get_post_type_object($a['post-type']);
 
-	$output; $body_html; $header_html; $tax_query = [];
+	$output = ''; $body_html = ''; $header_html = ''; $tax_query = [];
 
 	$title = (!empty($a['title']) ? $a['title'] : $pto->label);
 
@@ -108,7 +108,7 @@ function featured_post_type($atts) {
 				$title = $p->post_title;
 				$excerpt = substr($p->post_excerpt, 0, 155);
 				$permalink = get_permalink($p->ID);
-				$featured_image;
+				$featured_image = '';
 
 				// Determine what image to use
 				if(get_the_post_thumbnail_url($p->ID)) {
@@ -135,11 +135,21 @@ function featured_post_type($atts) {
 			foreach($query->posts as $p) {
 				$featured_image = get_the_post_thumbnail_url($p->ID, 'affiliate-thumb');
 				$title = $p->post_title;
+				$affiliate_link = get_field('affiliate_link', $p->ID);
 				if(!empty($featured_image)){
-					$body_html .= '<div class="slide text-center">
-                      <img class="img-fluid" src="'.$featured_image.'" alt="'.$title.'" />
-                      <p>'.$title.'</p>
-                    </div>';
+					if(!empty($affiliate_link)){
+						$body_html .= '	<div class="slide text-center">
+															<a href="'.$affiliate_link.'">
+																<img class="img-fluid" src="'.$featured_image.'" alt="'.$title.'" />
+																<p>'.$title.'</p>
+															</a>
+														</div>';
+					}else{
+						$body_html .= '	<div class="slide text-center">
+															<img class="img-fluid" src="'.$featured_image.'" alt="'.$title.'" />
+															<p>'.$title.'</p>
+														</div>';
+					}
 				}
 			}
 			$body_html .= "</div>";
