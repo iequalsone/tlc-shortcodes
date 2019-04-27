@@ -139,7 +139,7 @@ function featured_post_type($atts) {
 				if(!empty($featured_image)){
 					if(!empty($affiliate_link)){
 						$body_html .= '	<div class="slide text-center">
-															<a href="'.$affiliate_link.'">
+															<a href="'.$affiliate_link.'" target="_blank">
 																<img class="img-fluid" src="'.$featured_image.'" alt="'.$title.'" />
 																<p>'.$title.'</p>
 															</a>
