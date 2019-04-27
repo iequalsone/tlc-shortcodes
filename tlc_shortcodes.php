@@ -411,7 +411,10 @@ function featured_more_information($atts) {
 
 function get_single_banner($atts) {
   $obj = get_queried_object();
-  $output; $title; $featured_image;
+  $output = ""; $title = ""; $featured_image = "";
+
+  global $post;
+  $p = $post;
 
   if(is_single() || is_page()) {
     $title = get_the_title();
@@ -438,13 +441,15 @@ function get_single_banner($atts) {
     $output .= "<div class='single-banner'>
                   $img_html
                   <div class='banner-text'>
-                    <div class='row align-items-center'>
-                      <div class='col-12'>
-                        <div class='description'>
-                          <h2>$title</h2>
-                        </div>
-                      </div>
-                    </div>
+                  	<div class='container'>
+											<div class='row align-items-center'>
+												<div class='col-12'>
+													<div class='description'>
+														<h2>$title</h2>
+													</div>
+												</div>
+											</div>
+										</div>
                   </div>
                 </div>";
   }
