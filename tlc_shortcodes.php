@@ -426,7 +426,7 @@ function get_single_banner($atts) {
 	global $post;
 	$p = $post;
 
-	if(is_single() || is_page()) {
+	if(is_single() || is_page() || is_post_type_archive('wisdom-wednesday')) {
 		if (is_post_type_archive('wisdom-wednesday')) {
 			$title = 'Wisdom Wednesday Archive';
 		} elseif (is_singular('wisdom-wednesday')) {
