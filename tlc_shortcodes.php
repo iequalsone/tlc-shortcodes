@@ -427,7 +427,11 @@ function get_single_banner($atts) {
 	$p = $post;
 
 	if(is_single() || is_page()) {
-		$title = get_the_title();
+		if(is_singular('wisdom-wednesday')) {
+			$title = "Wisdom Wednesday: " . get_the_title();
+		} else {
+			$title = get_the_title();
+		}
 		$event_type = get_field('event_type', $p->ID);
 
 		// Determine what image to use
