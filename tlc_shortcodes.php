@@ -428,7 +428,7 @@ function get_single_banner($atts) {
 
 	if(is_single() || is_page()) {
 		if (is_archive()) {
-			return get_the_archive_title();
+			$title = get_the_archive_title();
 		} elseif (is_singular('wisdom-wednesday')) {
 			$title = "Wisdom Wednesday: " . get_the_title();
 		} else {
