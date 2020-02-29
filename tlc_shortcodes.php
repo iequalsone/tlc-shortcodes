@@ -454,8 +454,24 @@ function get_single_banner($atts) {
 
 	$img_html = (!empty($featured_image) ? "<img class='img-fluid banner-image' src='$featured_image' />" : "" );
 
-	if($featured_image){
-		$output .= "<div class='single-banner'>
+	if ( get_post_type( get_the_ID() ) == 'lesson' ) {
+		if($featured_image){
+			$output .= "<div class='single-banner'>
+                  <div class='banner-text'>
+                  	<div class='container'>
+											<div class='row align-items-center'>
+												<div class='col-12'>
+													<div class='description'>
+													</div>
+												</div>
+											</div>
+										</div>
+                  </div>
+                </div>";
+		}
+	} else {
+		if($featured_image){
+			$output .= "<div class='single-banner'>
                   $img_html
                   <div class='banner-text'>
                   	<div class='container'>
@@ -469,6 +485,7 @@ function get_single_banner($atts) {
 										</div>
                   </div>
                 </div>";
+		}
 	}
 
 	return $output;
