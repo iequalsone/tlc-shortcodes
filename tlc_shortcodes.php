@@ -446,7 +446,7 @@ function get_single_banner($atts) {
 		} elseif (wp_get_attachment_image_url(206)) {
 			$featured_image = wp_get_attachment_image_url(260, 'wide-banner');
 		}
-	} else if(is_post_type_archive('wisdom-wednesday')) {
+	} else if(is_post_type_archive('events')) {
 		$title = 'Schedule of Events';
 	} else {
 		$title = $obj->name;
