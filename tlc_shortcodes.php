@@ -430,7 +430,7 @@ function get_single_banner($atts) {
 		if (is_post_type_archive('wisdom-wednesday')) {
 			$title = 'Wisdom Wednesday Archive';
 		} elseif(is_post_type_archive('events')) {
-			$title = 'Schedule of Events';
+			$title = 'Event Listings';
 		} elseif (is_singular('wisdom-wednesday')) {
 			$title = "Wisdom Wednesday: " . get_the_title();
 		} else {
